@@ -44,10 +44,10 @@ use webcomponent::*;
 extern "C" {
     pub fn global_getWindow() -> Element;
     pub fn global_createEventListener() -> Element;
-    pub fn global_getProperty(obj: Element, name: i32) -> Element;
-    pub fn EventTarget_addEventListener(element: i32, eventName: i32, callback: i32) -> i32;
-    pub fn Element_set_innerHTML(element: Element, text: i32);
-    pub fn CustomElement_define(name: i32);
+    pub fn global_getProperty(obj: Element, name: CString) -> Element;
+    pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
+    pub fn Element_set_innerHTML(element: Element, text: CString);
+    pub fn CustomElement_define(name: CString,attributes: CString);
 }
 
 pub struct HelloWorld {}
@@ -73,12 +73,12 @@ pub fn main() -> () {
                 HelloWorld::create(element);
             }),
         );
-        CustomElement_define(cstr("hello-world"));
+        CustomElement_define(cstr("hello-world"),cstr("blah"));
     }
 }
 
 #[no_mangle]
-pub fn callback(callback_id: i32, event: i32) {
+pub fn callback(callback_id: Callback, event: i32) {
     // this function routes callbacks to the right closure
     route_callback(callback_id, event);
 }
