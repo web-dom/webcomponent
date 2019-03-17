@@ -58,7 +58,7 @@ extern "C" {
     pub fn global_getProperty(obj: Element, name: CString) -> Element;
     pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
     pub fn Element_set_innerHTML(element: Element, text: CString);
-    pub fn CustomElement_define(name: CString,attributes: CString);
+    pub fn CustomElement_define(name: CString);
 }
 
 pub struct HelloWorld {}
