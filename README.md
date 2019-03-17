@@ -84,7 +84,7 @@ pub fn main() -> () {
                 HelloWorld::create(element);
             }),
         );
-        CustomElement_define(cstr("hello-world"),cstr("blah"));
+        CustomElement_define(cstr("hello-world"));
     }
 }
 
