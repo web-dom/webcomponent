@@ -24,7 +24,6 @@ CustomElement_define(cstr("hello-world"));
 Listen for when a new instance of that custom element is constructed in the DOM and create an associated element in Rust to manage it.
 
 ```rust
-// listen to custom element creation on the window
 let window = global_getWindow();
 let callbackHandle = global_createEventListener();
 EventTarget_addEventListener(window, cstr("customelementcreated"), callbackHandle);
