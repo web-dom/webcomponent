@@ -63,11 +63,11 @@ impl HelloWorld {
 #[no_mangle]
 pub fn main() -> () {
     unsafe {
-        let win = global_getWindow();
-        let cb = global_createEventListener();
-        EventTarget_addEventListener(win, cstr("customelementcreated"), cb);
+        let window = global_getWindow();
+        let callbackHandle = global_createEventListener();
+        EventTarget_addEventListener(window, cstr("customelementcreated"), callbackHandle);
         add_callback(
-            cb,
+            callbackHandle,
             Box::new(|event| {
                 let element = global_getProperty(event, cstr("detail"));
                 HelloWorld::create(element);
