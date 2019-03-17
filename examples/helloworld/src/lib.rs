@@ -6,7 +6,8 @@ extern "C" {
     pub fn global_getProperty(obj: Element, name: CString) -> Element;
     pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
     pub fn Element_set_innerHTML(element: Element, text: CString);
-    pub fn CustomElement_define(name: CString,attributes: CString);
+    pub fn CustomElement_define(name: CString);
+    pub fn console_log(message: CString);
 }
 
 pub struct HelloWorld {}
@@ -32,7 +33,7 @@ pub fn main() -> () {
                 HelloWorld::create(element);
             }),
         );
-        CustomElement_define(cstr("hello-world"),cstr("blah"));
+        CustomElement_define(cstr("hello-world"));
     }
 }
 
