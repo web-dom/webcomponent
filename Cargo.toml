@@ -3,6 +3,8 @@ name = "webcomponent"
 version = "0.1.0"
 authors = ["Richard <Richard>"]
 edition = "2018"
+license = "MIT"
+description = "A simple web component framework"
 
 [dependencies]
 callback = "0.0.1"
