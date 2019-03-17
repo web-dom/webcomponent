@@ -7,7 +7,7 @@ Let's first create a component `<hello-world>` that simply sets its inner HTML t
 pub struct HelloWorld {}
 
 impl HelloWorld {
-    pub fn create(element: i32) {
+    pub fn create(element: Element) {
         unsafe {
             Element_set_innerHTML(element,cstr("Hello World")
         }
