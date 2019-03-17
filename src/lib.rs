@@ -1,5 +1,7 @@
+pub type Element = i32;
+pub type Callback = i32;
+pub type CString = i32;
 pub use callback::{add_callback, route_callback};
-pub use cstring::cstr;
 extern crate anymap;
 use anymap::AnyMap;
 // A global store of components to prevent deallocation
@@ -20,4 +22,8 @@ pub fn get_components<T>() -> &'static mut Vec<T> {
 
 pub fn get_component<T>(id: usize) -> &'static T {
     &get_components::<T>()[id]
+}
+
+pub fn cstr(s:&str) -> CString{
+    cstring::cstr(s)
 }
