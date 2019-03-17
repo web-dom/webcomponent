@@ -25,11 +25,12 @@ Listen for when a new instance of that custom element is constructed in the DOM 
 
 ```rust
 // listen to custom element creation on the window
-let win = global_getWindow();
-let cb = global_createEventListener();
-EventTarget_addEventListener(win, cstr("customelementcreated"), cb);
-add_callback( cb, Box::new(|event| {
-        // event "detail" property contains a handle to the new custom element
+let window = global_getWindow();
+let callbackHandle = global_createEventListener();
+EventTarget_addEventListener(window, cstr("customelementcreated"), callbackHandle);
+add_callback(
+    callbackHandle,
+    Box::new(|event| {
         let element = global_getProperty(event, cstr("detail"));
         HelloWorld::create(element);
     }),
