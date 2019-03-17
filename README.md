@@ -38,6 +38,17 @@ add_callback( cb, Box::new(|event| {
 
 Putting it all together
 
+```
+[package]
+name = "helloworld"
+
+[lib]
+crate-type =["cdylib"]
+
+[dependencies]
+webcomponent = "0.1"
+```
+
 ```rust
 use webcomponent::*;
 
@@ -85,6 +96,11 @@ pub fn callback(callback_id: Callback, event: i32) {
 ```
 
 Compile and load the web assembly module using [wasm-module](https://github.com/richardanaya/wasm-module)
+
+```console
+cargo build --target wasm32-unknown-unknown --release
+cp target/wasm32-unknown-unknown/release/helloworld.wasm .
+```
 
 ```
 <!DOCTYPE html>
