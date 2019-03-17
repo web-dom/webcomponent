@@ -38,7 +38,7 @@ add_callback(
 
 Putting it all together
 
-```
+```toml
 [package]
 name = "helloworld"
 
@@ -102,12 +102,12 @@ cargo build --target wasm32-unknown-unknown --release
 cp target/wasm32-unknown-unknown/release/helloworld.wasm .
 ```
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
-    <script src="https://unpkg.com/wasm-module@latest/wasm-module.min.js"></script>
+    <script src="https://unpkg.com/wasm-module@latest/wasm-module.js"></script>
   </head>
   <body>
     <hello-world></hello-world>
@@ -115,3 +115,5 @@ cp target/wasm32-unknown-unknown/release/helloworld.wasm .
   </body>
 </html>
 ```
+
+See it working [here](https://richardanaya.github.io/webcomponent/examples/helloworld/)
