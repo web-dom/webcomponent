@@ -176,3 +176,76 @@ CustomElement_define(cstr("x-clock"));
 ```
 
 See it working [here](https://richardanaya.github.io/webcomponent/examples/xclock/)
+
+# What about attributes?
+
+Let's take a look at an example that takes advantage of observing attribute changes and also a bit of shadow dom. First we are going to define our web component a bit differently.
+
+```rust
+CustomElement_defineWithAttributes(cstr("color-text"), cstr("color"));
+```
+
+We pass a comma separated string of attributes we want to watch on our custom component. This component is going to have an attribute color that determines what color the text is. We're going to listen for attribute changes.
+
+```rust
+pub struct ColorText {
+    element: Element,
+    shadow: Element,
+}
+
+impl ColorText {
+    fn create(element: Element) {
+        unsafe {
+            let shadow = Element_attachShadow(element);
+            // store xclock and keep its index
+            get_components().push(ColorText {
+                element: element,
+                shadow: shadow,
+            });
+            let id = get_components::<ColorText>().len() - 1;
+
+            let mut cb = global_createEventListener();
+            EventTarget_addEventListener(element, cstr("connected"), cb);
+            add_callback(
+                cb,
+                Box::new(move |_| {
+                    get_component::<ColorText>(id).connected();
+                }),
+            );
+
+            cb = global_createEventListener();
+            EventTarget_addEventListener(element, cstr("attributechanged"), cb);
+            add_callback(
+                cb,
+                Box::new(move |event| {
+                    get_component::<ColorText>(id).attribute_changed(event);
+                }),
+            );
+        }
+    }
+
+    fn connected(&self) {
+        self.render();
+    }
+
+    fn attribute_changed(&self, _event: i32) {
+        self.render();
+    }
+    fn render(&self) {
+        unsafe {
+            let c = Element_getAttribute(self.element, cstr("color"));
+            Element_set_innerHTML(
+                self.shadow,
+                cstr(&format!(
+                    "<style>:host{{color:{} }}</style><div><slot></slot></div>",
+                    cstr_from_raw(c)
+                )),
+            );
+        }
+    }
+}
+```
+
+
+
+See it working [here](https://richardanaya.github.io/webcomponent/examples/colortext/)
