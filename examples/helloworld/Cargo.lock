@@ -10,26 +10,35 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "cstring"
-version = "0.0.1"
+version = "0.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "globals"
+version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "helloworld"
 version = "0.1.0"
 dependencies = [
- "webcomponent 0.1.1",
+ "webcomponent 0.1.3",
 ]
 
 [[package]]
 name = "webcomponent"
-version = "0.1.1"
+version = "0.1.3"
 dependencies = [
- "anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "callback 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "cstring 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cstring 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "globals 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [metadata]
 "checksum anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)" = "33954243bd79057c2de7338850b85983a44588021f8a5fee574a8888c6de4344"
 "checksum callback 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "4b5a9e92335fc4a9e82322dc9558a81f9ee92304bc464e62c8a7092723609239"
-"checksum cstring 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)" = "fdea1d33ced6e0e603460f164c70db01e7aade2381f7d51964fada8f78fd1089"
+"checksum cstring 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "f578b1a192b89a8bf2052bfbfbf0378c8a76111f1f44abb132bd8f6e75d4ce36"
+"checksum globals 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "ece2b8971bf9e80f1c15afce25a12e041126fd2d534c7b782f775a39aa673f26"

@@ -142,7 +142,7 @@ impl XClock {
         unsafe {
             let x = XClock { element: element };
             x.render();
-            
+
             let id = add_component(x);
 
             let cb = global_createEventListener();
@@ -231,7 +231,7 @@ impl ColorText {
     fn attribute_changed(&self, _event: i32) {
         self.render();
     }
-    
+
     fn render(&self) {
         unsafe {
             let c = Element_getAttribute(self.element, cstr("color"));
@@ -239,7 +239,7 @@ impl ColorText {
                 self.shadow,
                 cstr(&format!(
                     "<style>:host{{color:{} }}</style><div><slot></slot></div>",
-                    cstr_from_raw(c)
+                    cstr_to_string(c)
                 )),
             );
         }

@@ -59,7 +59,7 @@ impl ColorText {
                 self.shadow,
                 cstr(&format!(
                     "<style>:host{{color:{} }}</style><div><slot></slot></div>",
-                    cstr_from_raw(c)
+                    cstr_to_string(c)
                 )),
             );
         }
