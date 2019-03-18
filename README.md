@@ -185,7 +185,7 @@ Let's take a look at an example that takes advantage of observing attribute chan
 CustomElement_defineWithAttributes(cstr("color-text"), cstr("color"));
 ```
 
-We pass a comma separated string of attributes we want to watch on our custom component. This component is going to have an attribute color that determines what color the text is. We're going to listen for attribute changes.
+We pass a comma separated string of attributes we want to watch on our custom component. This component `<color-text color="red">...</color-text>` is going to have an attribute color that determines what color the text is. We're going to listen for attribute changes. We're also going to use a shadow dom to encapsulate the styling and demonstrate how to use slots to render child contents from the light DOM.
 
 ```rust
 pub struct ColorText {
