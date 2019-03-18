@@ -24,6 +24,6 @@ pub fn get_component<T>(id: usize) -> &'static T {
     &get_components::<T>()[id]
 }
 
-pub fn cstr(s:&str) -> CString{
+pub fn cstr(s: &str) -> CString {
     cstring::cstr(s)
 }

@@ -117,3 +117,58 @@ cp target/wasm32-unknown-unknown/release/helloworld.wasm .
 ```
 
 See it working [here](https://richardanaya.github.io/webcomponent/examples/helloworld/)
+
+
+
+# Let's make a clock
+
+In order to make a clock we'll need to be able to hold onto our component at a global level so it doesn't get deallocated. Also we'll have to hold onto the DOM element associated with our component. To help with these are two global storage component utility functions:
+* get_components() - to get a global mutable vector of components of a particular type
+* get_component(x) - get get a specific member by index of the vector of components of a particular type
+
+For example: `get_components::<XClock>()` will get me a global vector of all known XClock components
+
+```rust
+struct XClock {
+    element: i32,
+}
+
+impl XClock {
+    fn create(element: i32) {
+        unsafe {
+            let x = XClock { element: element };
+            x.render();
+
+            // store xclock and keep its index
+            get_components().push(x);
+            let id = get_components::<XClock>().len() - 1;
+
+            let cb = global_createEventListener();
+            let window = global_getWindow();
+            Window_setInterval(window, cb, 1000);
+            add_callback(
+                cb,
+                Box::new(move |\_| {
+                    get_component::<XClock>(id).timer();
+                }),
+            );
+
+        }
+    }
+
+    fn timer(&self) {
+        self.render();
+    }
+
+    fn render(&self){
+        unsafe {
+            let d = Date_nowSeconds();
+            let o = Date_getTimezoneOffset();
+            let now: DateTime<Utc> = DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp((d-(o*60)) as i64, 0), Utc);
+            Element_set_innerHTML(self.element,cstr(&format!("{}",now.format("%I:%M:%S %p"))));
+        }
+    }
+}
+```
+
+See it working [here](https://richardanaya.github.io/webcomponent/examples/xclock/)
