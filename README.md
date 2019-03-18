@@ -35,8 +35,12 @@ add_callback(
     }),
 );
 ```
+`webcomponent` offers helper functions for managing callbacks from the web browser into web assembly. It has two functions you'll see:
 
-Putting it all together
+* add_callback(handle,fn) - which associates a callback handle with a closure in rust and stores it in a global table so it can execute later
+* route_callback(handle,event) - which finds a stored calleback, and executes it with an incoming event
+
+Putting it all together:
 
 ```toml
 [package]
@@ -183,7 +187,7 @@ Let's take a look at an example that takes advantage of observing attribute chan
 CustomElement_defineWithAttributes(cstr("color-text"), cstr("color"));
 ```
 
-We pass a comma separated string of attributes we want to watch on our custom component. This component is going to have an attribute color that determines what color the text is. We're going to listen for attribute changes.
+We pass a comma separated string of attributes we want to watch on our custom component. This component `<color-text color="red">...</color-text>` is going to have an attribute color that determines what color the text is of its content inside. We're going to listen for attribute changes. We're also going to use a shadow dom to encapsulate the styling and demonstrate how to use slots to render child contents from the light DOM.
 
 ```rust
 pub struct ColorText {
@@ -227,6 +231,7 @@ impl ColorText {
     fn attribute_changed(&self, _event: i32) {
         self.render();
     }
+    
     fn render(&self) {
         unsafe {
             let c = Element_getAttribute(self.element, cstr("color"));
