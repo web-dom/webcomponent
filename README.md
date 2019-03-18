@@ -126,11 +126,9 @@ See it working [here](https://richardanaya.github.io/webcomponent/examples/hello
 
 # Let's make a clock
 
-In order to make a clock we'll need to be able to hold onto our component at a global level so it doesn't get deallocated. Also we'll have to hold onto the DOM element associated with our component. To help with these are two global storage component utility functions:
-* get_components() - to get a global mutable vector of components of a particular type
-* get_component(x) - get get a specific member by index of the vector of components of a particular type
-
-For example: `get_components::<XClock>()` will get me a global vector of all known XClock components
+In order to make a clock we'll need to be able to hold onto our component at a global level so it doesn't get deallocated. `webcomponent` has two functions to help with this
+* add_component(x) - to add a component to global scope so it doesn't get deallocated and return a handle to it
+* get_component(handle) - get get a specific member by index of the vector of components of a particular type
 
 ```rust
 struct XClock {
