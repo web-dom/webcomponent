@@ -20,12 +20,10 @@ impl ColorText {
     fn create(element: Element) {
         unsafe {
             let shadow = Element_attachShadow(element);
-            // store xclock and keep its index
-            get_components().push(ColorText {
+            let id = add_component(ColorText {
                 element: element,
                 shadow: shadow,
             });
-            let id = get_components::<ColorText>().len() - 1;
 
             let mut cb = global_createEventListener();
             EventTarget_addEventListener(element, cstr("connected"), cb);

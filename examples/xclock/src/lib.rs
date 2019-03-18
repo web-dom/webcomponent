@@ -24,11 +24,7 @@ impl XClock {
         unsafe {
             let x = XClock { element: element };
             x.render();
-
-            // store xclock and keep its index
-            get_components().push(x);
-            let id = get_components::<XClock>().len() - 1;
-
+            let id = add_component(x);
             let cb = global_createEventListener();
             let window = global_getWindow();
             Window_setInterval(window, cb, 1000);

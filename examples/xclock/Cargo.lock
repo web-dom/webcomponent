@@ -26,6 +26,13 @@ version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "globals"
+version = "0.1.0"
+dependencies = [
+ "anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.50"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -60,11 +67,11 @@ dependencies = [
 
 [[package]]
 name = "webcomponent"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
- "anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "callback 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "cstring 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "globals 0.1.0",
 ]
 
 [[package]]
@@ -91,7 +98,7 @@ name = "xclock"
 version = "0.1.0"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "webcomponent 0.1.1",
+ "webcomponent 0.1.2",
 ]
 
 [metadata]
