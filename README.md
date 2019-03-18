@@ -37,7 +37,7 @@ add_callback(
 ```
 `webcomponent` offers helper functions for managing callbacks from the web browser into web assembly. It has two functions you'll see:
 
-* add_callback(handle,fn) - which associates a callback handle with a clojure in rust and stores it in a global table so it can execute later
+* add_callback(handle,fn) - which associates a callback handle with a closure in rust and stores it in a global table so it can execute later
 * route_callback(handle,event) - which finds a stored calleback, and executes it with an incoming event
 
 Putting it all together:
