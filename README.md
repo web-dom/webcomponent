@@ -171,7 +171,7 @@ impl XClock {
 }
 ```
 
-```
+```rust
 CustomElement_define(cstr("x-clock"));
 ```
 
