@@ -231,6 +231,7 @@ impl ColorText {
     fn attribute_changed(&self, _event: i32) {
         self.render();
     }
+    
     fn render(&self) {
         unsafe {
             let c = Element_getAttribute(self.element, cstr("color"));
