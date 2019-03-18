@@ -2,6 +2,7 @@ pub type Element = i32;
 pub type Callback = i32;
 pub type CString = i32;
 pub use callback::{add_callback, route_callback};
+use std::ffi::CStr;
 extern crate anymap;
 use anymap::AnyMap;
 // A global store of components to prevent deallocation
@@ -26,4 +27,9 @@ pub fn get_component<T>(id: usize) -> &'static T {
 
 pub fn cstr(s: &str) -> CString {
     cstring::cstr(s)
+}
+
+pub fn cstr_from_raw(p: CString) -> String {
+    let s: &CStr = unsafe { CStr::from_ptr(p as *const i8) };
+    s.to_str().unwrap().to_owned()
 }
