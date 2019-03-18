@@ -171,4 +171,8 @@ impl XClock {
 }
 ```
 
+```
+CustomElement_define(cstr("x-clock"));
+```
+
 See it working [here](https://richardanaya.github.io/webcomponent/examples/xclock/)
