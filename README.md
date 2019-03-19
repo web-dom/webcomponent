@@ -1,5 +1,5 @@
 # webcomponent
-A simple web component system for Rust using [wasm-module](https://github.com/richardanaya/wasm-module) for DOM access.
+A simple web component system for Rust using [wasm-module](https://github.com/richardanaya/wasm-module) for DOM access. These examples will show unsafe calls for simplicity. In normal sitations you'd wrap the calls to the DOM.
 
 Let's first create a component `<hello-world>` that simply sets its inner HTML to "Hello World"
 
