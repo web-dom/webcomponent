@@ -80,7 +80,7 @@ thread_local! {
 pub fn main() -> () {
     // This function starts listening for hello-world components
     CUSTOM_ELEMENTS.with(|c| {
-        c.borrow_mut().define("color-text");
+        c.borrow_mut().define_with_attributes("color-text","color");
     });
 }
 

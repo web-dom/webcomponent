@@ -11,6 +11,7 @@ extern "C" {
     pub fn global_getProperty(obj: Element, name: CString) -> Element;
     pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
     pub fn CustomElement_define(name: CString);
+    pub fn CustomElement_defineWithAttributes(name: CString, attributes: CString);
     pub fn Element_get_tagName(element: Element) -> CString;
 }
 
@@ -70,6 +71,12 @@ impl CustomElements {
     pub fn define(&self, s: &str) {
         unsafe {
             CustomElement_define(cstr(s));
+        }
+    }
+
+    pub fn define_with_attributes(&self, s: &str, a: &str) {
+        unsafe {
+            CustomElement_defineWithAttributes(cstr(s), cstr(a));
         }
     }
 
