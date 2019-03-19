@@ -9,6 +9,7 @@ extern "C" {
     pub fn CustomElement_defineWithAttributes(name: CString, attributes: CString);
     pub fn Element_attachShadow(element: Element) -> Element;
     pub fn Element_getAttribute(element: Element, attr: CString) -> CString;
+    pub fn console_error(message: CString);
 }
 
 pub struct ColorText {
@@ -17,29 +18,29 @@ pub struct ColorText {
 }
 
 impl ColorText {
-    fn create(element: Element) {
+    fn create(custom_elements: &mut CustomElements, element: Element) {
         unsafe {
             let shadow = Element_attachShadow(element);
-            let id = add_component(ColorText {
+            let id = custom_elements.add(ColorText {
                 element: element,
                 shadow: shadow,
             });
 
             let mut cb = global_createEventListener();
             EventTarget_addEventListener(element, cstr("connected"), cb);
-            add_callback(
+            custom_elements.add_callback(
                 cb,
-                Box::new(move |_| {
-                    get_component::<ColorText>(id).connected();
+                Box::new(move |custom_elements,_| {
+                    custom_elements.get::<ColorText>(id).connected();
                 }),
             );
 
             cb = global_createEventListener();
             EventTarget_addEventListener(element, cstr("attributechanged"), cb);
-            add_callback(
+            custom_elements.add_callback(
                 cb,
-                Box::new(move |event| {
-                    get_component::<ColorText>(id).attribute_changed(event);
+                Box::new(move |custom_elements,event| {
+                    custom_elements.get::<ColorText>(id).attribute_changed(event);
                 }),
             );
         }
@@ -66,33 +67,27 @@ impl ColorText {
     }
 }
 
-#[no_mangle]
-pub fn malloc(_len: i32) -> i32 {
-    // this is a really dumb memory allocator that always says there's free memory at the position 0
-    // since we only have one string coming back from the browser via HTMLInputElement_get_value
-    // we don't really have a problem
-    return 0;
+
+thread_local! {
+    static CUSTOM_ELEMENTS:std::cell::RefCell<CustomElements> = std::cell::RefCell::new(CustomElements::new(
+    |custom_elements, tag, element| match tag {
+        "color_text" => ColorText::create(custom_elements, element),
+        _ => unsafe { console_error(cstr(&format!("unknown web component {}", tag))) },
+    }))
 }
 
 #[no_mangle]
 pub fn main() -> () {
-    unsafe {
-        let win = global_getWindow();
-        let cb = global_createEventListener();
-        EventTarget_addEventListener(win, cstr("customelementcreated"), cb);
-        add_callback(
-            cb,
-            Box::new(|event| {
-                let element = global_getProperty(event, cstr("detail"));
-                ColorText::create(element);
-            }),
-        );
-        CustomElement_defineWithAttributes(cstr("color-text"), cstr("color"));
-    }
+    // This function starts listening for hello-world components
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().define("color-text");
+    });
 }
 
 #[no_mangle]
 pub fn callback(callback_id: Callback, event: i32) {
-    // this function routes callbacks to the right closure
-    route_callback(callback_id, event);
+    // This function routes callbacks to the right closure
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().route_callback(callback_id, event);
+    });
 }

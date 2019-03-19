@@ -1,44 +1,39 @@
 use webcomponent::*;
 
 extern "C" {
-    pub fn global_getWindow() -> Element;
-    pub fn global_createEventListener() -> Element;
-    pub fn global_getProperty(obj: Element, name: CString) -> Element;
-    pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
     pub fn Element_set_innerHTML(element: Element, text: CString);
-    pub fn CustomElement_define(name: CString);
-    pub fn console_log(message: CString);
+    pub fn console_error(text: CString);
 }
 
 pub struct HelloWorld {}
-
 impl HelloWorld {
-    pub fn create(element: Element) {
+    pub fn create(_custom_elements: &CustomElements, element: Element) {
         unsafe {
             Element_set_innerHTML(element, cstr("Hello World"));
         }
     }
 }
 
+thread_local! {
+    static CUSTOM_ELEMENTS:std::cell::RefCell<CustomElements> = std::cell::RefCell::new(CustomElements::new(
+    |custom_elements, tag, element| match tag {
+        "hello-world" => HelloWorld::create(custom_elements, element),
+        _ => unsafe { console_error(cstr(&format!("unknown web component {}", tag))) },
+    }))
+}
+
 #[no_mangle]
 pub fn main() -> () {
-    unsafe {
-        let win = global_getWindow();
-        let cb = global_createEventListener();
-        EventTarget_addEventListener(win, cstr("customelementcreated"), cb);
-        add_callback(
-            cb,
-            Box::new(|event| {
-                let element = global_getProperty(event, cstr("detail"));
-                HelloWorld::create(element);
-            }),
-        );
-        CustomElement_define(cstr("hello-world"));
-    }
+    // This function starts listening for hello-world components
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().define("hello-world");
+    });
 }
 
 #[no_mangle]
 pub fn callback(callback_id: Callback, event: i32) {
-    // this function routes callbacks to the right closure
-    route_callback(callback_id, event);
+    // This function routes callbacks to the right closure
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().route_callback(callback_id, event);
+    });
 }

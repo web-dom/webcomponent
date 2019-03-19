@@ -9,3 +9,4 @@ crate-type =["cdylib"]
 
 [dependencies]
 webcomponent = {path="../../"}
+lazy_static = "1.3"
