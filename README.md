@@ -1,5 +1,5 @@
 # webcomponent
-A simple web component system for Rust using [wasm-module](https://github.com/richardanaya/wasm-module) for DOM access.
+A simple web component system for Rust using [wasm-module](https://github.com/richardanaya/wasm-module) for DOM access. These examples will show unsafe calls for simplicity. In normal sitations you'd wrap the calls to the DOM.
 
 Let's first create a component `<hello-world>` that simply sets its inner HTML to "Hello World"
 
@@ -12,6 +12,34 @@ impl HelloWorld {
             Element_set_innerHTML(element,cstr("Hello World")
         }
     }
+}
+```
+
+Now lets do some setup to register this custom element and setup a routing system for events from DOM
+
+```rust
+thread_local! {
+    static CUSTOM_ELEMENTS:std::cell::RefCell<CustomElements> = std::cell::RefCell::new(CustomElements::new(
+    |custom_elements, tag, element| match tag {
+        "hello-world" => HelloWorld::create(custom_elements, element),
+        _ => unsafe { console_error(cstr(&format!("unknown web component {}", tag))) },
+    }))
+}
+
+#[no_mangle]
+pub fn main() -> () {
+    // This function starts listening for hello-world components
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().define("hello-world");
+    });
+}
+
+#[no_mangle]
+pub fn callback(callback_id: Callback, event: i32) {
+    // This function routes callbacks to the right closure
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().route_callback(callback_id, event);
+    });
 }
 ```
 
