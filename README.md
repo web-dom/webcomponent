@@ -15,6 +15,34 @@ impl HelloWorld {
 }
 ```
 
+Now lets do some setup to register this custom element and setup a routing system for events from DOM
+
+```rust
+thread_local! {
+    static CUSTOM_ELEMENTS:std::cell::RefCell<CustomElements> = std::cell::RefCell::new(CustomElements::new(
+    |custom_elements, tag, element| match tag {
+        "hello-world" => HelloWorld::create(custom_elements, element),
+        _ => unsafe { console_error(cstr(&format!("unknown web component {}", tag))) },
+    }))
+}
+
+#[no_mangle]
+pub fn main() -> () {
+    // This function starts listening for hello-world components
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().define("hello-world");
+    });
+}
+
+#[no_mangle]
+pub fn callback(callback_id: Callback, event: i32) {
+    // This function routes callbacks to the right closure
+    CUSTOM_ELEMENTS.with(|c| {
+        c.borrow_mut().route_callback(callback_id, event);
+    });
+}
+```
+
 See it working [here](https://richardanaya.github.io/webcomponent/examples/helloworld/)
 
 
