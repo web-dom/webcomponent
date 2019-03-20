@@ -7,5 +7,5 @@ license = "MIT"
 description = "A simple web component framework"
 
 [dependencies]
-web-dom = "0.0.4"
+web-dom = "0.0.5"
 anymap = "0.12"
