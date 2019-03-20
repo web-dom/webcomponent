@@ -24,7 +24,7 @@ pub fn main() -> () {
 }
 
 #[no_mangle]
-pub fn callback(callback_id: Callback, event: i32) {
+pub fn callback(callback_id: Callback, event: Event) {
     // This function routes callbacks to the right closure
     CUSTOM_ELEMENTS.with(|c| {
         c.borrow_mut().route_callback(callback_id, event);

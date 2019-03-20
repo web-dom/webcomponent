@@ -7,7 +7,7 @@ struct XClock {
 }
 
 impl XClock {
-    fn create(custom_elements: &mut CustomElements, element: i32) {
+    fn create(custom_elements: &mut CustomElements, element: Element) {
         let x = XClock { element: element };
         x.render();
         let id = custom_elements.add(x);
@@ -51,7 +51,7 @@ pub fn main() -> () {
 }
 
 #[no_mangle]
-pub fn callback(callback_id: Callback, event: i32) {
+pub fn callback(callback_id: Callback, event: Event) {
     // This function routes callbacks to the right closure
     CUSTOM_ELEMENTS.with(|c| {
         c.borrow_mut().route_callback(callback_id, event);
