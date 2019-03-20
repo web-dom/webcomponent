@@ -32,7 +32,7 @@ pub fn main() -> () {
 }
 
 #[no_mangle]
-pub fn callback(callback_id: Callback, event: i32) {
+pub fn callback(callback_id: EventListener, event: Event) {
     // This function routes callbacks to the right closure
     CUSTOM_ELEMENTS.with(|c| {
         c.borrow_mut().route_callback(callback_id, event);
@@ -50,11 +50,11 @@ In order to make a clock we'll need to be able to hold onto our component at a g
 
 ```rust
 struct XClock {
-    element: i32,
+    element: Element,
 }
 
 impl XClock {
-    fn create(custom_elements: &mut CustomElements, element: i32) {
+    fn create(custom_elements: &mut CustomElements, element: Element) {
         let x = XClock { element: element };
         x.render();
         let id = custom_elements.add(x);
@@ -127,9 +127,10 @@ impl ColorText {
         self.render();
     }
 
-    fn attribute_changed(&self, _event: i32) {
+    fn attribute_changed(&self, _event: Event) {
         self.render();
     }
+    
     fn render(&self) {
         let c = element::get_attribute(self.element, "color");
         element::set_inner_html(
