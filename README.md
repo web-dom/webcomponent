@@ -1,6 +1,10 @@
 # webcomponent
 A simple web component system for Rust using [web-dom](https://github.com/web-dom/web-dom) for DOM access.
 
+```toml
+webcomponent = "0.3.1"
+```
+
 Let's first create a component `<hello-world>` that simply sets its inner HTML to "Hello World"
 
 ```rust
