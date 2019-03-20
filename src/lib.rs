@@ -1,19 +1,9 @@
 use anymap::AnyMap;
-pub use cstring::{cstr, cstr_to_string, CString};
 use std::collections::HashMap;
+pub use web_dom::*;
 pub type Callback = i32;
 pub type Element = i32;
 pub type CustomElement = usize;
-
-extern "C" {
-    pub fn global_getWindow() -> Element;
-    pub fn global_createEventListener() -> Element;
-    pub fn global_getProperty(obj: Element, name: CString) -> Element;
-    pub fn EventTarget_addEventListener(element: Element, eventName: CString, callback: Callback);
-    pub fn CustomElement_define(name: CString);
-    pub fn CustomElement_defineWithAttributes(name: CString, attributes: CString);
-    pub fn Element_get_tagName(element: Element) -> CString;
-}
 
 pub struct CustomElements {
     pub components: AnyMap,
@@ -28,17 +18,15 @@ impl CustomElements {
             processor: Box::new(processor),
             callbacks: HashMap::new(),
         };
-        unsafe {
-            let win = global_getWindow();
-            let cb = global_createEventListener();
-            EventTarget_addEventListener(win, cstr("customelementcreated"), cb);
-            let p = Box::new(move |controller: &mut CustomElements, event| {
-                let element = global_getProperty(event, cstr("detail"));
-                let tag = cstr_to_string(Element_get_tagName(element)).to_lowercase();
-                (controller.processor)(controller, &tag, element);
-            });
-            c.add_callback(cb, p);
-        }
+        let win = window();
+        let cb = create_event_listener();
+        eventtarget::add_event_listener(win, "customelementcreated", cb);
+        let p = Box::new(move |controller: &mut CustomElements, event| {
+            let el = get_property(event, "detail");
+            let tag = element::get_tag_name(el).to_lowercase();
+            (controller.processor)(controller, &tag, el);
+        });
+        c.add_callback(cb, p);
         c
     }
 
@@ -69,15 +57,11 @@ impl CustomElements {
     }
 
     pub fn define(&self, s: &str) {
-        unsafe {
-            CustomElement_define(cstr(s));
-        }
+        customelement::define(s);
     }
 
     pub fn define_with_attributes(&self, s: &str, a: &str) {
-        unsafe {
-            CustomElement_defineWithAttributes(cstr(s), cstr(a));
-        }
+        customelement::define_with_attributes(s, a);
     }
 
     pub fn route_callback(&mut self, callback_id: Callback, event: i32) {
@@ -89,12 +73,4 @@ impl CustomElements {
         f(self, event);
         self.add_callback(callback_id, f);
     }
-}
-
-#[no_mangle]
-pub fn malloc(_len: i32) -> i32 {
-    // this is a really dumb memory allocator that always says there's free memory at the position 0
-    // since we only have one string coming back from the browser via HTMLInputElement_get_value
-    // we don't really have a problem
-    return 0;
 }

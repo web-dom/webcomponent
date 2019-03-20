@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
-    <script src="https://unpkg.com/wasm-module@0.0.10/wasm-module.js"></script>
+    <title>Example</title>
+    <script src="https://unpkg.com/web-dom@latest/web-dom.js"></script>
   </head>
   <body>
     <color-text color="red">
       Choose my color by changing my "color" attribute!
     </color-text>
-    <wasm-module src="colortext.wasm"></wasm-module>
+    <web-dom module="colortext.wasm"></web-dom>
   </body>
 </html>
