@@ -1,16 +1,13 @@
 # webcomponent
-A simple web component system for Rust using [wasm-module](https://github.com/richardanaya/wasm-module) for DOM access. These examples will show unsafe calls for simplicity. In normal sitations you'd wrap the calls to the DOM.
+A simple web component system for Rust using [web-dom](https://github.com/web-dom/web-dom) for DOM access.
 
 Let's first create a component `<hello-world>` that simply sets its inner HTML to "Hello World"
 
 ```rust
 pub struct HelloWorld {}
-
 impl HelloWorld {
-    pub fn create(custom_elements: &CustomElements, element: Element) {
-        unsafe {
-            Element_set_innerHTML(element,cstr("Hello World")
-        }
+    pub fn create(_custom_elements: &CustomElements, element: Element) {
+        element::set_inner_html(element, "Hello World!");
     }
 }
 ```
@@ -22,7 +19,7 @@ thread_local! {
     static CUSTOM_ELEMENTS:std::cell::RefCell<CustomElements> = std::cell::RefCell::new(CustomElements::new(
     |custom_elements, tag, element| match tag {
         "hello-world" => HelloWorld::create(custom_elements, element),
-        _ => unsafe { console_error(cstr(&format!("unknown web component {}", tag))) },
+        _ => console::error(&format!("unknown web component {}", tag)),
     }))
 }
 
@@ -57,37 +54,30 @@ struct XClock {
 }
 
 impl XClock {
-    fn create(custom_elements: &CustomElements, element: i32) {
-        unsafe {
-            let x = XClock { element: element };
-            x.render();
-
-            let id = custom_elements.add(x);
-
-            let cb = global_createEventListener();
-            let window = global_getWindow();
-            Window_setInterval(window, cb, 1000);
-            custom_elements.add_callback(
-                cb,
-                Box::new(move |custom_elements,event| {
-                    custom_elements.get::<XClock>(id).timer();
-                }),
-            );
-
-        }
+    fn create(custom_elements: &mut CustomElements, element: i32) {
+        let x = XClock { element: element };
+        x.render();
+        let id = custom_elements.add(x);
+        let cb = create_event_listener();
+        window::set_interval(window(), cb, 1000);
+        custom_elements.add_callback(
+            cb,
+            Box::new(move |custom_elements, _event| {
+                custom_elements.get::<XClock>(id).timer();
+            }),
+        );
     }
 
     fn timer(&self) {
         self.render();
     }
 
-    fn render(&self){
-        unsafe {
-            let d = Date_nowSeconds();
-            let o = Date_getTimezoneOffset();
-            let now: DateTime<Utc> = DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp((d-(o*60)) as i64, 0), Utc);
-            Element_set_innerHTML(self.element,cstr(&format!("{}",now.format("%I:%M:%S %p"))));
-        }
+    fn render(&self) {
+        let d = date::now_seconds();
+        let o = date::get_timezone_offset();
+        let now: DateTime<Utc> =
+            DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp((d - (o * 60)) as i64, 0), Utc);
+        element::set_inner_html(self.element, &format!("{}", now.format("%I:%M:%S %p")));
     }
 }
 ```
@@ -105,32 +95,32 @@ pub struct ColorText {
 }
 
 impl ColorText {
-    fn create(custom_elements: &CustomElements, element: Element) {
-        unsafe {
-            let shadow = Element_attachShadow(element);
-            let id = custom_elements.add(ColorText {
-                element: element,
-                shadow: shadow,
-            });
+    fn create(custom_elements: &mut CustomElements, element: Element) {
+        let shadow = customelement::attach_shadow(element);
+        let id = custom_elements.add(ColorText {
+            element: element,
+            shadow: shadow,
+        });
 
-            let mut cb = global_createEventListener();
-            EventTarget_addEventListener(element, cstr("connected"), cb);
-            custom_elements.add_callback(
-                cb,
-                Box::new(move |custom_elements,event| {
-                    custom_elements.get::<ColorText>(id).connected();
-                }),
-            );
+        let mut cb = create_event_listener();
+        eventtarget::add_event_listener(element, "connected", cb);
+        custom_elements.add_callback(
+            cb,
+            Box::new(move |custom_elements, _| {
+                custom_elements.get::<ColorText>(id).connected();
+            }),
+        );
 
-            cb = global_createEventListener();
-            EventTarget_addEventListener(element, cstr("attributechanged"), cb);
-            custom_elements.add_callback(
-                cb,
-                Box::new(move |custom_elements,event| {
-                    custom_elements.get::<ColorText>(id).attribute_changed(event);
-                }),
-            );
-        }
+        cb = create_event_listener();
+        eventtarget::add_event_listener(element, "attributechanged", cb);
+        custom_elements.add_callback(
+            cb,
+            Box::new(move |custom_elements, event| {
+                custom_elements
+                    .get::<ColorText>(id)
+                    .attribute_changed(event);
+            }),
+        );
     }
 
     fn connected(&self) {
@@ -140,18 +130,15 @@ impl ColorText {
     fn attribute_changed(&self, _event: i32) {
         self.render();
     }
-
     fn render(&self) {
-        unsafe {
-            let c = Element_getAttribute(self.element, cstr("color"));
-            Element_set_innerHTML(
-                self.shadow,
-                cstr(&format!(
-                    "<style>:host{{color:{} }}</style><div><slot></slot></div>",
-                    cstr_to_string(c)
-                )),
-            );
-        }
+        let c = element::get_attribute(self.element, "color");
+        element::set_inner_html(
+            self.shadow,
+            &format!(
+                "<style>:host{{color:{} }}</style><div><slot></slot></div>",
+                c
+            ),
+        );
     }
 }
 ```
