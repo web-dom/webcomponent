@@ -127,7 +127,7 @@ impl ColorText {
         self.render();
     }
 
-    fn attribute_changed(&self, _event: i32) {
+    fn attribute_changed(&self, _event: Event) {
         self.render();
     }
     
