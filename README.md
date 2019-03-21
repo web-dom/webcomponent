@@ -140,7 +140,7 @@ impl ColorText {
         element::set_inner_html(
             self.shadow,
             &format!(
-                "<style>:host\{color:{} \}</style><div><slot></slot></div>",
+                "<style>:host {color:{} }</style><div><slot></slot></div>",
                 c
             ),
         );
