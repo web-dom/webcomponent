@@ -1,11 +1,11 @@
 [package]
 name = "webcomponent"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Richard <Richard>"]
 edition = "2018"
 license = "MIT"
 description = "A simple web component framework"
 
 [dependencies]
-web-dom = "0.0.6"
+web-dom = "0.0.8"
 anymap = "0.12"

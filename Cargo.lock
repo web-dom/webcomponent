@@ -7,17 +7,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "web-dom"
-version = "0.0.6"
+version = "0.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "webcomponent"
-version = "0.3.2"
+version = "0.3.3"
 dependencies = [
  "anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "web-dom 0.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "web-dom 0.0.8 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [metadata]
 "checksum anymap 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)" = "33954243bd79057c2de7338850b85983a44588021f8a5fee574a8888c6de4344"
-"checksum web-dom 0.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "3f160be6f988b8ed6d3a400a4500ebc4d4593d8a75250f818c66bf2df0acb545"
+"checksum web-dom 0.0.8 (registry+https://github.com/rust-lang/crates.io-index)" = "0365f9bc457d2b0b1aeeec650a57bd087c111648e05424a051e66ab9a0556c87"
