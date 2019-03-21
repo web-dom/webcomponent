@@ -44,7 +44,7 @@ pub fn callback(callback_id: EventListener, event: Event) {
 }
 ```
 
-See it working [here](https://richardanaya.github.io/webcomponent/examples/helloworld/)
+See it working [here](https://web-dom.github.io/webcomponent/examples/helloworld/)
 
 
 
@@ -86,7 +86,7 @@ impl XClock {
 }
 ```
 
-See it working [here](https://richardanaya.github.io/webcomponent/examples/xclock/)
+See it working [here](https://web-dom.github.io/webcomponent/examples/xclock/)
 
 # Observing Attributes
 
@@ -148,4 +148,4 @@ impl ColorText {
 }
 ```
 
-See it working [here](https://richardanaya.github.io/webcomponent/examples/colortext/)
+See it working [here](https://web-dom.github.io/webcomponent/examples/colortext/)
