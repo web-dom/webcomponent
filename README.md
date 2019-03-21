@@ -2,7 +2,7 @@
 A simple web component system for Rust using [web-dom](https://github.com/web-dom/web-dom) for DOM access.
 
 ```toml
-webcomponent = "0.3.1"
+webcomponent = "0.3"
 ```
 
 Let's first create a component `<hello-world>` that simply sets its inner HTML to "Hello World"
@@ -134,7 +134,7 @@ impl ColorText {
     fn attribute_changed(&self, _event: Event) {
         self.render();
     }
-    
+
     fn render(&self) {
         let c = element::get_attribute(self.element, "color");
         element::set_inner_html(

@@ -26,8 +26,8 @@ impl XClock {
     }
 
     fn render(&self) {
-        let d = date::now_seconds();
-        let o = date::get_timezone_offset();
+        let d = (date::now()/1000 as f64) as i64;
+        let o = date::get_timezone_offset() as i64;
         let now: DateTime<Utc> =
             DateTime::<Utc>::from_utc(NaiveDateTime::from_timestamp((d - (o * 60)) as i64, 0), Utc);
         element::set_inner_html(self.element, &format!("{}", now.format("%I:%M:%S %p")));
